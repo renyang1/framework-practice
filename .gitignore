@@ -1,0 +1,5 @@
+# Project exclude paths
+/IPersistence/target/
+/IPersistence-test/target/
+/java/target/
+/mybatis/target/

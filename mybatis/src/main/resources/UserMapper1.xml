@@ -1,0 +1,8 @@
+<mapper namespace="com.ry.mapper.UserMapper1">
+
+    <!--sql的唯一标识：namespace.id来组成 ： statementId-->
+    <select id="findAll" resultType="com.ry.entity.User" >
+        select * from user
+    </select>
+
+</mapper>
