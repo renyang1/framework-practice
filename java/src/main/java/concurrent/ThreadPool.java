@@ -12,7 +12,6 @@ import java.util.List;
 public class ThreadPool {
 
     public static void main(String[] args) {
-       List<Integer> list = Collections.singletonList(0);
-       list.addAll(Arrays.asList(-1, -2));
+
     }
 }
