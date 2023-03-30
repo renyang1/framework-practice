@@ -1,6 +1,9 @@
 package concurrent;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author ryang
@@ -10,9 +13,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AtomicIntegerTest {
 
     public static void main(String[] args) {
-        AtomicInteger atomicInteger = new AtomicInteger();
+        User user1 = new User("ry1", 1);
+        User user2 = new User("ry2", 2);
+        User user3 = new User("ry1", 1);
 
-        System.out.println(atomicInteger.compareAndSet(0, 1));
-        System.out.println(atomicInteger.compareAndSet(0, 10));
+        AtomicReference<User> atomicReference = new AtomicReference<>(user1);
+        System.out.println(atomicReference.compareAndSet(user1, user2));
+        System.out.println(atomicReference.get().toString());
+
+        System.out.println(atomicReference.compareAndSet(user1, user2));
+        System.out.println(atomicReference.get().toString());
+
+        atomicReference.set(user3);
+        System.out.println(atomicReference.compareAndSet(user1, user2));
+        System.out.println(atomicReference.get().toString());
     }
+}
+
+@Data
+@AllArgsConstructor
+class User {
+    private String name;
+    private int age;
 }
