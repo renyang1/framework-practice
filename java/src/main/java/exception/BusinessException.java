@@ -1,5 +1,8 @@
 package exception;
 
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * @author ryang
  * @Description
@@ -16,5 +19,25 @@ public class BusinessException extends RuntimeException {
 
     public int getCode() {
         return code;
+    }
+
+    public static void main(String[] args) {
+        AtomicReference<Integer> atomicReference = new AtomicReference<>();
+        atomicReference.set(100);
+        System.out.println(atomicReference.compareAndSet(100, 200));
+        System.out.println(atomicReference.compareAndSet(200, 100));
+
+
+        Integer a = 100;
+        Integer b = 100;
+
+        System.out.println(a.hashCode());
+        System.out.println(b.hashCode());
+
+        Integer c = 200;
+        Integer d = 200;
+
+        System.out.println(c.hashCode());
+        System.out.println(d.hashCode());
     }
 }
