@@ -11,12 +11,12 @@ public class ThreadPoolDemo {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Integer.MAX_VALUE);
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 2, 1000
-                , TimeUnit.MILLISECONDS, new SynchronousQueue<>()
-                , Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 2, 5
+                , TimeUnit.MILLISECONDS, new LinkedBlockingDeque<>(5)
+                , Executors.defaultThreadFactory(), new MyRejected());
         for (int i = 0; i < 10; i++) {
             final int j = i;
-            threadPool.execute(() -> {
+            threadPool.submit(() -> {
                 System.out.println(Thread.currentThread().getName() + "\t i=" + j + "\t come in");
                 try {
                     Thread.sleep(500);
@@ -25,6 +25,15 @@ public class ThreadPoolDemo {
                 }
             });
         }
+        System.out.println(Thread.currentThread().getName() + "end");
         threadPool.shutdown();
+    }
+}
+
+class MyRejected implements RejectedExecutionHandler {
+
+    @Override
+    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+        r.run();
     }
 }
