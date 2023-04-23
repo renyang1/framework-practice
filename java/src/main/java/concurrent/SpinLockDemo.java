@@ -6,36 +6,38 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @author ryang
  * @Description
- * @date 2023年04月18日 08:54
+ * @date 2023年04月18日 11:22 上午
  */
 public class SpinLockDemo {
 
     AtomicReference<Thread> atomicReference = new AtomicReference<>();
 
     public static void main(String[] args) throws InterruptedException {
-        SpinLockDemo spinLockDemo = new SpinLockDemo();
+        SpinLockDemo demo = new SpinLockDemo();
         new Thread(() -> {
-            spinLockDemo.lock();
+            demo.lock();
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(3);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
-            spinLockDemo.unLock();
+            // 释放锁
+            demo.unLock();
         }, "t1").start();
 
-        // 主线程休眠1s，让t1线程先执行
         TimeUnit.SECONDS.sleep(1);
 
         new Thread(() -> {
-            spinLockDemo.lock();
-            spinLockDemo.unLock();
+            demo.lock();
+            // 释放锁
+            demo.unLock();
         }, "t2").start();
+
     }
 
     public void lock() {
         Thread thread = Thread.currentThread();
-        System.out.println(thread.getName() + "\t come in");
+        System.out.println(thread.getName() + "\t lock start");
         while (!atomicReference.compareAndSet(null, thread)) {
             // 自旋
         }
@@ -44,7 +46,7 @@ public class SpinLockDemo {
 
     public void unLock() {
         Thread thread = Thread.currentThread();
-        System.out.println(thread.getName() + "\t come in");
+        System.out.println(thread.getName() + "\t unLock start");
         atomicReference.compareAndSet(thread, null);
         System.out.println(thread.getName() + "\t unLock end");
     }
