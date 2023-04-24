@@ -1,9 +1,11 @@
 package concurrent;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import com.google.common.collect.Maps;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author ryang
@@ -12,9 +14,27 @@ import java.util.List;
  */
 public class ThreadPool {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        AtomicReference<Map<Integer, Integer>> atomicReference = new AtomicReference<>();
+        atomicReference.set(new HashMap<>());
 
-            System.out.println(new Date(1681821479800L));
+        for (int i =0; i< 500; i++) {
+            final int tmp = i;
+            new Thread(()->{
+                try {
+                    TimeUnit.MICROSECONDS.sleep(100);
+                    Map<Integer, Integer> integerIntegerMap = atomicReference.get();
+                    Map<Integer, Integer> newMap = Maps.newHashMap(integerIntegerMap);
+                    newMap.put(tmp, tmp);
+                    System.out.println(atomicReference.compareAndSet(integerIntegerMap, newMap));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        }
+
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println(atomicReference.get().size() + "\t" + atomicReference.get().toString());
 
     }
 }

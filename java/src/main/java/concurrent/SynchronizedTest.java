@@ -15,18 +15,7 @@ public class SynchronizedTest {
     private static Interner<String> interner = Interners.newWeakInterner();
 
     public static void main(String[] args) throws InterruptedException {
-        ExecutorService threadPool = Executors.newFixedThreadPool(5);
-        for (int i = 0; i < 100; i++) {
-            threadPool.execute(() -> {
-                try {
-                    new SynchronizedTest().lockById1(new String("ry001"));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        Thread.sleep(5000);
-        threadPool.shutdown();
+        new SynchronizedTest().lockById("ryang");
     }
 
     public void lockById(String token) throws InterruptedException {
